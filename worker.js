@@ -16,20 +16,26 @@ export const api = {
 }
 
 export default {
-  fetch: async (req, env) => {
+  fetch: async (req, env, ctx) => {
     const { user, origin, requestId, method, body, time, pathSegments, query, pathOptions, url } = await env.CTX.fetch(req).then(res => res.json())
     if (!user.profile) return Response.redirect('https://codex.do/login')
-    const options = {
-      model: 'code-davinci-002',
-      prompt: '// ES6 arrow function called ' + pathSegments[0],
-      temperature: 0,
-      max_tokens: 300,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+    if (pathname == '/api') // we need to return a list of examples
+    const [functionName] = pathSegments
+    let code = await env.CODEX.get(functionName)
+    if (!code) {
+      const options = {
+        model: 'code-davinci-002',
+        prompt: '// ES6 arrow function called ' + functionName,
+        temperature: 0,
+        max_tokens: 300,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      }
+      const completion = await fetch('https://api.openai.com/v1/completions', { method: 'post', body: JSON.stringify(options), headers:{ 'content-type': 'application/json', 'authorization': 'Bearer ' + env.OPENAI_API_KEY }}).then(res => res.json())
+      code = options.prompt + completion.choices[0].text
+      ctx.waitUntil(env.CODEX.put(functionName,code)
     }
-    const completion = await fetch('https://api.openai.com/v1/completions', { method: 'post', body: JSON.stringify(options), headers:{ 'content-type': 'application/json', 'authorization': 'Bearer ' + env.OPENAI_API_KEY }}).then(res => res.json())
-    const code = options.prompt + completion.choices[0].text
     const codeLines = code.split('\n')
     if (query.json) return new Response(JSON.stringify({ api, options, completion, codeLines, code, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
     return new Response(code, { headers: { 'content-type': 'application/javascript; charset=utf-8' }})
