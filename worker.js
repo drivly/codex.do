@@ -34,7 +34,7 @@ export default {
       }
       const completion = await fetch('https://api.openai.com/v1/completions', { method: 'post', body: JSON.stringify(options), headers:{ 'content-type': 'application/json', 'authorization': 'Bearer ' + env.OPENAI_API_KEY }}).then(res => res.json())
       code = options.prompt + completion.choices[0].text
-      ctx.waitUntil(env.CODEX.put(functionName,code)
+      ctx.waitUntil(env.CODEX.put(functionName,code, {metadata: {user}}))
     }
     const codeLines = code.split('\n')
     if (query.json) return new Response(JSON.stringify({ api, options, completion, codeLines, code, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
