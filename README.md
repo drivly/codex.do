@@ -4,4 +4,4 @@ GPT-3 Codex Completions API
 <https://codex.do/fizzBuzz>
 
 
-<https://codex.do/fizzBuzz?code>
+<https://codex.do/fizzBuzz?json>
