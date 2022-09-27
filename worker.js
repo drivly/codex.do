@@ -17,7 +17,7 @@ export const api = {
 
 export default {
   fetch: async (req, env) => {
-    const { user, origin, requestId, method, body, time, pathSegments, pathOptions, url, query } = await env.CTX.fetch(req).then(res => res.json())
+    const { user, origin, requestId, method, body, time, pathSegments, query, pathOptions, url, query } = await env.CTX.fetch(req).then(res => res.json())
     if (!user.profile) return Response.redirect('https://gpt.do/login')
     const options = {
       model: 'code-davinci-002',
@@ -29,7 +29,9 @@ export default {
       presence_penalty: 0,
     }
     const completion = await fetch('https://api.openai.com/v1/completions', { method: 'post', body: JSON.stringify(options), headers:{ 'content-type': 'application/json', 'authorization': 'Bearer ' + env.OPENAI_API_KEY }}).then(res => res.json())
-    const codeLines = completion.choices.map(choice => (options.prompt + choice.text).split('\n'))
-    return new Response(JSON.stringify({ api, options, completion, codeLines, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
+    const code = completion.choices.map(choice => (options.prompt + choice.text))
+    const codeLines = code.split('\n')
+    if (query.file) return new Response(code, { headers: { 'content-type': 'application/javascript; charset=utf-8' }})
+    return new Response(JSON.stringify({ api, options, completion, codeLines, code, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   },
 }
