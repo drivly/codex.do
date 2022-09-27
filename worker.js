@@ -17,7 +17,7 @@ export const api = {
 
 export default {
   fetch: async (req, env, ctx) => {
-    const { user, origin, requestId, method, body, time, pathname, pathSegments, query, headers, pathOptions, url } = await env.CTX.fetch(req).then(res => res.json())
+    const ctx, { user, origin, requestId, method, body, time, pathname, pathSegments, query, headers, pathOptions, url } = await env.CTX.fetch(req).then(res => res.json())
     if (!user.profile && !headers['cf-worker'].includes('.do')) return Response.redirect('https://codex.do/login')
     if (pathname == '/api') return new Response(JSON.stringify({ api, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
     const [functionName] = pathSegments
