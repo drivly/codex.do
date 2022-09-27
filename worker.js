@@ -31,7 +31,7 @@ export default {
     const completion = await fetch('https://api.openai.com/v1/completions', { method: 'post', body: JSON.stringify(options), headers:{ 'content-type': 'application/json', 'authorization': 'Bearer ' + env.OPENAI_API_KEY }}).then(res => res.json())
     const code = completion.choices[0].prompt + completion.choices[0].text
     const codeLines = code.split('\n')
-    if (query.file) return new Response(code, { headers: { 'content-type': 'application/javascript; charset=utf-8' }})
-    return new Response(JSON.stringify({ api, options, completion, codeLines, code, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
+    return new Response(code, { headers: { 'content-type': 'application/javascript; charset=utf-8' }})
+//     return new Response(JSON.stringify({ api, options, completion, codeLines, code, user }, null, 2), { headers: { 'content-type': 'application/json; charset=utf-8' }})
   },
 }
