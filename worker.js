@@ -25,7 +25,7 @@ export default {
     if (!code) {
       const options = {
         model: 'code-davinci-002',
-        prompt: '// ES6 arrow function called ' + functionName,
+        prompt: '// Generated at http://codex.do/fizzBuzz\n// ES6 arrow function called ' + functionName,
         temperature: 0,
         max_tokens: 300,
         top_p: 1,
