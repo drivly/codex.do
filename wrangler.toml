@@ -1,5 +1,5 @@
 name = "codex-do"
-# route = { pattern = "*/*", zone_name = "codex.do" }
+route = { pattern = "*/*", zone_name = "codex.do" }
 main = "worker.js"
 compatibility_date = "2022-08-25"
 
