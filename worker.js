@@ -17,7 +17,7 @@ export const api = {
 
 export default {
   fetch: async (req, env) => {
-    const { user, origin, requestId, method, body, time, pathSegments, query, pathOptions, url, query } = await env.CTX.fetch(req).then(res => res.json())
+    const { user, origin, requestId, method, body, time, pathSegments, query, pathOptions, url } = await env.CTX.fetch(req).then(res => res.json())
     if (!user.profile) return Response.redirect('https://gpt.do/login')
     const options = {
       model: 'code-davinci-002',
